@@ -11,13 +11,13 @@ async function loadBirds(){
   ])
 
   const parrot = setupModel(parrotData);
-  parrot.position.set(0, 0, 2.5);
+  parrot.position.set(0, 0, 3.0);
 
   const flamingo = setupModel(flamingoData);
-  flamingo.position.set(0, 0, -5);
+  flamingo.position.set(0, -1, -5);
 
   const stork = setupModel(storkData);
-  stork.position.set(0, 2, 0);
+  stork.position.set(0, 0.5, 0);
   
   return {parrot, flamingo, stork};
 }

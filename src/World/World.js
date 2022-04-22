@@ -13,6 +13,8 @@ let renderer;
 let scene;
 let loop;
 let controls;
+let models = [];
+let currentFocusIndex = 0;
 
 class World {
   constructor(container) {
@@ -35,9 +37,13 @@ class World {
   async init(){
     const {parrot, flamingo, stork} = await loadBirds();
 
-    controls.target.copy(parrot.position);
+    [parrot, flamingo, stork].forEach((birdModel) => {
+      this.setModels(birdModel);
+    });
+    
+    this.focusCurrent();
 
-    scene.add(parrot, flamingo, stork);
+    scene.add(...this.getModels());
   }
 
   render() {
@@ -50,6 +56,44 @@ class World {
 
   stop() {
     loop.stop();
+  }
+
+  focusCurrent(){
+    // "target" sets the location of focus, where the object orbits around
+    controls.target.copy(this.getCurrentFocusModel().position)
+  }
+
+  focusNext(){
+    this.setCurrentFocusIndex(this.getNextFocusIndex());
+    this.focusCurrent();
+  }
+
+  getModelsLength(){
+    return models.length;
+  }
+
+  getCurrentFocusIndex(){
+    return currentFocusIndex;
+  }
+
+  setCurrentFocusIndex(index){
+    currentFocusIndex = index;
+  }
+
+  getCurrentFocusModel(){
+    return this.getModels()[this.getCurrentFocusIndex()];
+  }
+
+  getModels(){
+    return models;
+  }
+
+  getNextFocusIndex(){
+    return (currentFocusIndex + 1) % this.getModelsLength();
+  }
+
+  setModels(model){
+    models = [...models, model];
   }
 }
 
