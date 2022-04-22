@@ -8,29 +8,30 @@ import { createRenderer } from './systems/renderer.js';
 import { Resizer } from './systems/Resizer.js';
 import { Loop } from './systems/Loop.js';
 
-let camera;
-let renderer;
-let scene;
-let loop;
-let controls;
-let models = [];
-let currentFocusIndex = 0;
-
 class World {
-  constructor(container) {
-    camera = createCamera();
-    renderer = createRenderer();
-    scene = createScene();
-    loop = new Loop(camera, scene, renderer);
-    container.append(renderer.domElement);
+  #camera;
+  #renderer;
+  #scene;
+  #loop;
+  #controls;
+  #models = [];
+  #currentFocusIndex = 0;
+  
 
-    controls = createControls(camera, renderer.domElement);
+  constructor(container) {
+    this.#camera = createCamera();
+    this.#renderer = createRenderer();
+    this.#scene = createScene();
+    this.#loop = new Loop(this.#camera, this.#scene, this.#renderer);
+    container.append(this.#renderer.domElement);
+
+    this.#controls = createControls(this.#camera, this.#renderer.domElement);
     const { ambientLight, mainLight } = createLights();
 
-    loop.updatables.push(controls);
-    scene.add(ambientLight, mainLight);
+    this.#loop.updatables.push(this.#controls);
+    this.#scene.add(ambientLight, mainLight);
 
-    const resizer = new Resizer(container, camera, renderer);
+    const resizer = new Resizer(container, this.#camera, this.#renderer);
   }
 
   // asynchronous setup here
@@ -43,24 +44,24 @@ class World {
     
     this.focusCurrent();
 
-    scene.add(...this.getModels());
+    this.#scene.add(...this.getModels());
   }
 
   render() {
-    renderer.render(scene, camera);
+    this.#renderer.render(this.#scene, this.#camera);
   }
 
   start() {
-    loop.start();
+    this.#loop.start();
   }
 
   stop() {
-    loop.stop();
+    this.#loop.stop();
   }
 
   focusCurrent(){
     // "target" sets the location of focus, where the object orbits around
-    controls.target.copy(this.getCurrentFocusModel().position)
+    this.#controls.target.copy(this.getCurrentFocusModel().position)
   }
 
   focusNext(){
@@ -69,15 +70,15 @@ class World {
   }
 
   getModelsLength(){
-    return models.length;
+    return this.#models.length;
   }
 
   getCurrentFocusIndex(){
-    return currentFocusIndex;
+    return this.#currentFocusIndex;
   }
 
   setCurrentFocusIndex(index){
-    currentFocusIndex = index;
+    this.#currentFocusIndex = index;
   }
 
   getCurrentFocusModel(){
@@ -85,15 +86,15 @@ class World {
   }
 
   getModels(){
-    return models;
+    return this.#models;
   }
 
   getNextFocusIndex(){
-    return (currentFocusIndex + 1) % this.getModelsLength();
+    return (this.#currentFocusIndex + 1) % this.getModelsLength();
   }
 
   setModels(model){
-    models = [...models, model];
+    this.#models = [...this.#models, model];
   }
 }
 
