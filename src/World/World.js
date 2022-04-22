@@ -12,6 +12,7 @@ let camera;
 let renderer;
 let scene;
 let loop;
+let controls;
 
 class World {
   constructor(container) {
@@ -21,7 +22,7 @@ class World {
     loop = new Loop(camera, scene, renderer);
     container.append(renderer.domElement);
 
-    const controls = createControls(camera, renderer.domElement);
+    controls = createControls(camera, renderer.domElement);
     const { ambientLight, mainLight } = createLights();
 
     loop.updatables.push(controls);
@@ -30,9 +31,13 @@ class World {
     const resizer = new Resizer(container, camera, renderer);
   }
 
+  // asynchronous setup here
   async init(){
-    await loadBirds();
-    
+    const {parrot, flamingo, stork} = await loadBirds();
+
+    controls.target.copy(parrot.position);
+
+    scene.add(parrot, flamingo, stork);
   }
 
   render() {
