@@ -2,11 +2,13 @@ import {loadBirds} from './components/birds/birds.js'
 import { createCamera } from './components/camera.js';
 import { createLights } from './components/lights.js';
 import { createScene } from './components/scene.js';
+import { createButton } from './components/button.js';
 
 import { createControls } from './systems/controls.js';
 import { createRenderer } from './systems/renderer.js';
 import { Resizer } from './systems/Resizer.js';
 import { Loop } from './systems/Loop.js';
+import { Raycaster } from './systems/Raycaster';
 
 class World {
   #camera;
@@ -16,6 +18,7 @@ class World {
   #controls;
   #models = [];
   #currentFocusIndex = 0;
+  #raycaster;
   
 
   constructor(container) {
@@ -23,6 +26,7 @@ class World {
     this.#renderer = createRenderer();
     this.#scene = createScene();
     this.#loop = new Loop(this.#camera, this.#scene, this.#renderer);
+    this.#raycaster = new Raycaster(this.#camera, this.#scene)
     container.append(this.#renderer.domElement);
 
     this.#controls = createControls(this.#camera, this.#renderer.domElement);
@@ -32,19 +36,25 @@ class World {
     this.#scene.add(ambientLight, mainLight);
 
     const resizer = new Resizer(container, this.#camera, this.#renderer);
+
+    // button
+    const button = createButton();
+    this.#scene.add(button);
   }
 
   // asynchronous setup here
   async init(){
     const {parrot, flamingo, stork} = await loadBirds();
-
     [parrot, flamingo, stork].forEach((birdModel) => {
       this.setModels(birdModel);
     });
-    
-    this.focusCurrent();
-
+    // this.focusCurrent();
     this.#scene.add(...this.getModels());
+  }
+
+  initRaycaster(){
+    this.#renderer.domElement.addEventListener('click', this.#raycaster.calculatePointer.bind(this.#raycaster))
+    window.requestAnimationFrame(this.#raycaster.render.bind(this.#raycaster));
   }
 
   render() {
