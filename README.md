@@ -10,3 +10,6 @@ yarn dev
 - [main](https://github.com/yejineee/load_3d_models_in_glTF_format) : 기본 glb 파일 로드
 - [focus-button](https://github.com/yejineee/load_3d_models_in_glTF_format/tree/focus-button) : 오브젝트 클릭시, 카메라 포커스 변경
 - [tree](https://github.com/yejineee/load_3d_models_in_glTF_format/tree/tree) : tree glb 파일 로드, debug 추가  
+
+## Reference
+- [Load 3D Models in glTF Format - discoverthreejs.com](https://discoverthreejs.com/book/first-steps/load-models/)
