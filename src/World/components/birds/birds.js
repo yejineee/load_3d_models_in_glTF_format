@@ -1,4 +1,4 @@
-import { GLTFLoader } from '../../../examples/jsm/loaders/GLTFLoader'
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import {setupModel} from './setupModel';
 
 async function loadBirds(){
