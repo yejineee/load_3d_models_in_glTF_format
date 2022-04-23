@@ -1,4 +1,6 @@
+import * as dat from 'dat.gui'
 import {loadBirds} from './components/birds/birds.js'
+import {loadTree} from './components/tree/tree.js'
 import { createCamera } from './components/camera.js';
 import { createLights } from './components/lights.js';
 import { createScene } from './components/scene.js';
@@ -38,17 +40,23 @@ class World {
     const resizer = new Resizer(container, this.#camera, this.#renderer);
 
     // button
-    const button = createButton();
-    this.#scene.add(button);
+    // const button = createButton();
+    // this.#scene.add(button);
+
+    // debug
+    this.debug();
   }
 
   // asynchronous setup here
   async init(){
-    const {parrot, flamingo, stork} = await loadBirds();
-    [parrot, flamingo, stork].forEach((birdModel) => {
-      this.setModels(birdModel);
-    });
-    // this.focusCurrent();
+    const {tree} = await loadTree();
+    this.setModels(tree);
+
+    // const {parrot, flamingo, stork} = await loadBirds();
+    // [parrot, flamingo, stork].forEach((birdModel) => {
+    //   this.setModels(birdModel);
+    // });
+
     this.#scene.add(...this.getModels());
   }
 
@@ -105,6 +113,18 @@ class World {
 
   setModels(model){
     this.#models = [...this.#models, model];
+  }
+
+  debug(){
+    // Debug
+    const gui = new dat.GUI()
+
+    const cameraGUI = gui.addFolder('Camera');
+    const options = {min:-10000, max: 10000, step: 100};
+    cameraGUI.add(this.#camera.position, 'x', ...Object.values(options));
+    cameraGUI.add(this.#camera.position, 'y', ...Object.values(options));
+    cameraGUI.add(this.#camera.position, 'z', ...Object.values(options));
+    cameraGUI.open();
   }
 }
 
