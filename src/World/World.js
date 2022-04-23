@@ -52,9 +52,9 @@ class World {
     this.#scene.add(...this.getModels());
   }
 
-  initRaycaster(){
+  initRaycaster(callback){
     this.#renderer.domElement.addEventListener('click', this.#raycaster.calculatePointer.bind(this.#raycaster))
-    window.requestAnimationFrame(this.#raycaster.render.bind(this.#raycaster));
+    this.#renderer.domElement.addEventListener('click', this.#raycaster.render.bind(this.#raycaster, callback))
   }
 
   render() {

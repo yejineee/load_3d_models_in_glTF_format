@@ -10,7 +10,12 @@ async function main() {
   // complete async tasks. init에서 비동기적인 세팅
   await world.init();
 
-  world.initRaycaster();
+  world.initRaycaster((intersect) => {
+    if(intersect.object.name !== 'button'){
+      return;
+    }
+    world.focusNext();
+  });
 
   // start the animation loop
   world.start();

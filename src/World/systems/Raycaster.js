@@ -14,13 +14,10 @@ class Raycaster {
 	  this.pointer.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
   }
 
-  render(){
+  render(callback){
     this.raycaster.setFromCamera(this.pointer, this.camera);
     const intersects = this.raycaster.intersectObjects(this.scene.children);
-    for(let i = 0; i < intersects.length ; i++){
-      intersects[i].object.material.color.set(new THREE.Color('blue'))
-    }
-    window.requestAnimationFrame(this.render.bind(this));
+    intersects.forEach(callback)
   }
 }
 
